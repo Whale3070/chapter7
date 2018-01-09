@@ -1,0 +1,50 @@
+#coding:utf-8
+import requests,webbrowser,re,copy
+
+mydic={}
+commodity={}
+def get():
+    url = 'http://www.wechall.net/challenge/training/programming/knapsaak/problem.php'
+    s=requests.Session()
+    a=s.get(url,headers={'Cookie':'WC: 10184499-36365-nGmogPzbh1MOrnNa'})
+    char= str(a.text) #获取网页内容
+
+    myre='[a-zA-z]+'  #用正则表达式获取需要的内容
+    Keys =re.findall(myre,char)
+
+    myree ='\d+'     #获取商品价格等数字
+    Values =re.findall(myree,char)
+
+    for i in range(0,12):
+        mydic[Keys[i]]=Values[i]
+    commodity = copy.deepcopy(mydic) #该方法是字典深拷贝，复制原字典到新的内存
+    del commodity['Level']
+    del commodity['Sum']
+    del commodity['Stock']
+    del commodity['Items']
+    Key = list(commodity.keys())
+    Values = [ int(x) for x in commodity.values()]  #将商品的价格转换为整型
+    stocks = int(mydic['Stock']) +1  #这是商品可能库存量
+    sum    = int(mydic['Sum'])
+    items  = int(mydic['Items'])
+    print mydic
+    print Key
+    print Values
+    for Key[0] in range(stocks):  #经检查，Key[0]在循环里是整型，没错。
+        for Key[1] in range(stocks):
+            for Key[2] in range(stocks):
+                for Key[3] in range(stocks):
+                    for Key[4] in range(stocks):
+                        for Key[5] in range(stocks):
+                            for Key[6] in range(stocks):
+                                for Key[7] in range(stocks):
+                                    if Key[0]*Values[0] + Key[1]*Values[1] + Key[2]*Values[2] + Key[3]*Values[3] + \
+                                    Key[4]*Values[4] + Key[5]*Values[5] + Key[6]*Values[6] + Key[7]*Values[7] ==  sum:
+                                        if Values[0] + Values[1]+ Values[2]+ Values[3]+ Values[4]+ Values[5]+ Values[6]+ Values[7] == items:
+                                            myList = [Values[0],Values[1],Values[2],Values[3],Values[4],Values[5],Values[6],Values[7]]
+                                            print myList
+def main():
+    get()
+
+if __name__ == '__main__':
+    main()
