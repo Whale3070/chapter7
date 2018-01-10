@@ -1,0 +1,75 @@
+#coding:utf-8
+import requests
+import webbrowser
+import re
+import copy
+
+mydic={}
+commodity={}
+commodityKey=[]
+ans = []  #在第54行，ans列表会存储答案
+def get():
+    url = 'http://www.wechall.net/challenge/training/programming/knapsaak/problem.php'
+    s=requests.Session()
+    cookies = {'WC': '10186539-0-V559tiBmeaBXeRPM'}
+    a=s.get(url,cookies=cookies)
+    char= str(a.text) #获取网页内容
+    
+    myre='[a-zA-z]+'  #用正则表达式获取需要的内容
+    Keys =re.findall(myre,char)
+    print Keys
+    print len(Keys)
+    numKeys = int(len(Keys))
+
+    myree ='\d+'     #获取商品价格等数字
+    Values =re.findall(myree,char)
+
+    for i in range(numKeys):
+        mydic[Keys[i]]=Values[i]
+    commodity = copy.deepcopy(mydic) #该方法是字典深拷贝，复制原字典到新的内存
+    del commodity['Level']
+    del commodity['Sum']
+    del commodity['Stock']
+    del commodity['Items']
+    Key = list(commodity.keys())
+    commodityKey = copy.deepcopy(Key) #这是商品名称，组合为字符串的答案时候要用
+    Values = [ int(x) for x in commodity.values()]  #将商品的价格转换为整型
+    stocks = int(mydic['Stock']) +1                 #这是商品可能库存量
+    sum    = int(mydic['Sum'])                      #这是购买的商品总价
+    items  = int(mydic['Items'])                    #这是购买商品的数量
+
+    print Values
+    i=0
+    for Key[0] in range(stocks):  #经检查，Key[0]在循环里是整型，没错。
+        for Key[1] in range(stocks):
+            for Key[2] in range(stocks):
+                for Key[3] in range(stocks):
+                    for Key[4] in range(stocks):
+                        for Key[5] in range(stocks):
+                            for Key[6] in range(stocks):
+                                for Key[7] in range(stocks):
+                                    if Key[0]*Values[0] + Key[1]*Values[1] + Key[2]*Values[2] + Key[3]*Values[3] + \
+                                    Key[4]*Values[4] + Key[5]*Values[5] + Key[6]*Values[6] + Key[7]*Values[7] ==  sum:
+                                        if Key[0] + Key[1]+ Key[2]+ Key[3]+ Key[4]+ Key[5]+ Key[6]+ Key[7] == items:
+                                            i+=1
+                                            if i==1:
+                                                myList = [Key[0],Key[1],Key[2],Key[3],Key[4],Key[5],Key[6],Key[7]] #这是购买商品的数量
+                                                for e in range(8):                                
+                                                    if myList[e] > 0:
+                                                        print myList
+                                                        beforeans = str(myList[e]) + commodityKey[e]
+                                                        ans.append(beforeans)
+                                                        print beforeans    
+                                                joinans = ''.join(ans)
+                                                print ans
+                                                print joinans
+    parameter = '?' +'answer=' +'['+joinans+']'
+    handle ='http://www.wechall.net/challenge/training/programming/knapsaak/answer.php'+parameter
+    r = requests.get(handle,cookies = cookies)
+    print(r.text)
+   
+def main():
+    get()
+
+if __name__ == '__main__':
+    main()
