@@ -1,0 +1,35 @@
+#coding:utf-8
+def isprime(num): #输入一个数，如果是素数就输出
+    count = num/2
+   
+    while count >1:
+        if num % count ==0:
+        	break
+        count -= 1
+    else:
+	return num
+
+def digitSum(lprime):
+    for x in lprime:#将素数搜集到一个列表l中
+       
+	 #将素数的每一位转换为列表listl:如[1,2,3,4,5,6,7]
+	listl = list(x) 
+	intl = [int(listl[i]) for i in range(7)] #将字符串类型转化为数字型，方便相加
+	sum = reduce(lambda x,y:x+y,intl)       #sum是一位素数的各个位数之和
+	
+	if isprime(sum) is not None:#如果素数的各位之和，也是素数
+		print 'prime is',sum
+		print 'number is',x
+def main():
+	l = []
+	for num in range(1000000,1000100):
+		result = isprime(num)
+		if result is not None:  #如果函数的结果不为空，即使结果是素数
+			prime = '%d' % result #将函数的返回值转化为整型
+		        
+			l.append(prime) #将素数写入到列表
+	print l #输出列表，要跳出循环写。如果写入到循环的语句里，会输出很多次。
+	digitSum(l)
+
+if __name__ == '__main__':
+	main()
